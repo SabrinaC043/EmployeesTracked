@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
-const { addNewDepartment } = require("./db/lib");
-// require('console.table');
+const { addNewDepartment, connection } = require("./db/lib");
+require('console.table');
 const db = require('./db/lib');
 
 function init() {
@@ -66,9 +66,11 @@ function viewRoles() {
 }
 
 function addDepartment() {
-    db.addNewDepartment(answers).then(([answers]) => console.log(`${data}Department added`)).then(() => init())
 
 }
+
+
+
 
 // function addEmployee() {
 //     i

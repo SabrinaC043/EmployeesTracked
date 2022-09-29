@@ -24,6 +24,7 @@ class Lib {
     }
     //employee.id, employee.first_name, employee.last_name, FROM employee JOIN role.title, role.salary, ON role WHERE manager_name=role.id;"
 
+
     addNewDepartment() {
         inquirer
             .prompt([
@@ -34,12 +35,10 @@ class Lib {
                 },
             ])
             .then((answers) => {
-                return this.connection.promise().query(`INSERT INTO department (name) VALUES("${answers.addDepartment}")`);
+                connection.promise().query(`INSERT INTO department (name) VALUES("${answers.addDepartment}")`);
             });
     }
 };
-
-
 
 
 
