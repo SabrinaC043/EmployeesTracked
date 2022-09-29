@@ -24,7 +24,6 @@ class Lib {
     }
     //employee.id, employee.first_name, employee.last_name, FROM employee JOIN role.title, role.salary, ON role WHERE manager_name=role.id;"
 
-
     addNewDepartment() {
         inquirer
             .prompt([
@@ -35,10 +34,43 @@ class Lib {
                 },
             ])
             .then((answers) => {
-                connection.promise().query(`INSERT INTO department (name) VALUES("${answers.addDepartment}")`);
+                connection.query(`INSERT INTO department (name) VALUES("${answers.addDepartment}";)`);
             });
     }
-};
+
+    addNewRole() {
+
+        connection.promise().query(`SELECT department.name FROM department`).then((data) => {
+            console.table(data[0])
+        })
+
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "addRole",
+                message: "What is the name of this role?"
+            },
+            {
+                type: "input",
+                name: "addSalary",
+                message: "What is the salary of the role?"
+            },
+            {
+                type: "list",
+                name: "selectDepartment",
+                message: "What department does this role belong to?",
+                choices: [`${data[0]}`]
+            }
+        ]).then((answers) => {
+            connection.query(`INSERT INTO department (name) VALUES("${answers.addDepartment}";)`);
+        });
+    }
+}
+
+
+
+
+
 
 
 

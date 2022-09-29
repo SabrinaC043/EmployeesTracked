@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const { addNewDepartment, connection } = require("./db/lib");
+const { addNewDepartment, connection, addNewRole } = require("./db/lib");
 require('console.table');
 const db = require('./db/lib');
 
@@ -66,44 +66,14 @@ function viewRoles() {
 }
 
 function addDepartment() {
+    db.addNewDepartment();
+}
+
+function addRole() {
+    db.addNewRole();
 
 }
 
-
-
-
-// function addEmployee() {
-//     i
-//     init();
-// };
-
-// function addRole() {
-//     inquirier.prompt([
-//         {
-//             type: "input",
-//             name: "addRole",
-//             message: "What is the name of this role?"
-//         },
-//         {
-//             type: "input",
-//             name: "addSalary",
-//             message: "What is the salary of the role?"
-//         },
-//         {
-//             type: "list",
-//             name: "selectDepartment",
-//             message: "What department does this role belong to?",
-//             choices: ["Finance", "Enginnering", "Legal", "Sales",]
-//         },
-//         {
-//             type: "list",
-//             name: "employeeRole",
-//             message: "What is the employees role",
-//             choices: ["Lawyer", "Enginner", "Legal Team Lead", "Salesperson", "Lead Engineer"]
-//         },
-//     ])
-//     init();
-// };
 
 // function updateEmployeeRole() {
 //     inquirer.prompt[{
