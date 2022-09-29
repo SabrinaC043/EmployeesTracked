@@ -66,8 +66,10 @@ function viewRoles() {
 }
 
 function addDepartment() {
-    db.addNewDepartment();
+    db.addNewDepartment()
 }
+
+
 
 function addRole() {
     db.addNewRole();
@@ -103,3 +105,5 @@ function addRole() {
 
 
 init();
+
+module.exports = init

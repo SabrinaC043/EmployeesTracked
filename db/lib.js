@@ -1,6 +1,6 @@
 const connection = require("./connection");
 const inquirer = require("inquirer");
-
+const index = require("../index");
 class Lib {
     constructor(connection) {
         this.connection = connection;
@@ -34,7 +34,13 @@ class Lib {
                 },
             ])
             .then((answers) => {
-                connection.query(`INSERT INTO department (name) VALUES("${answers.addDepartment}";)`);
+                connection.query(`INSERT INTO department VALUES(default,"${answers.addDepartment}");`,
+                    (err, res) => {
+                        console.log(`Added ${answers.addDepartment} department`)
+                        console.log(!err)
+                        index;
+
+                    })
             });
     }
 
@@ -59,10 +65,10 @@ class Lib {
                 type: "list",
                 name: "selectDepartment",
                 message: "What department does this role belong to?",
-                choices: [`${data[0]}`]
+                choices: []
             }
         ]).then((answers) => {
-            connection.query(`INSERT INTO department (name) VALUES("${answers.addDepartment}";)`);
+            connection.promise().query(`INSERT INTO department (name) VALUES("${answers.addDepartment}";)`);
         });
     }
 }
