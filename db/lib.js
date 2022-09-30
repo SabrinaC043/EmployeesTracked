@@ -1,6 +1,5 @@
 const connection = require("./connection");
-const inquirer = require("inquirer");
-const index = require("../index");
+
 class Lib {
     constructor(connection) {
         this.connection = connection;
@@ -18,59 +17,32 @@ class Lib {
     }
     getAllEmployees() {
         return this.connection
+            // THEN I am presented with a formatted table showing
+            //, departments, salaries, and managers that the employees report to
+            // employee table, role , department,employee onto itself
+            // SELECT 
             .promise()
             .query(
-                "SELECT * FROM employee");
-    }
-    //employee.id, employee.first_name, employee.last_name, FROM employee JOIN role.title, role.salary, ON role WHERE manager_name=role.id;"
-
-    addNewDepartment() {
-        inquirer
-            .prompt([
-                {
-                    type: "input",
-                    name: "addDepartment",
-                    message: "What is the name of the Department?",
-                },
-            ])
-            .then((answers) => {
-                connection.query(`INSERT INTO department VALUES(default,"${answers.addDepartment}");`,
-                    (err, res) => {
-                        console.log(`Added ${answers.addDepartment} department`)
-                        console.log(!err)
-                        index;
-
-                    })
-            });
+                "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary, CONCAT(manager.first_name,' ',manager.last_name) FROM employee LEFT JOIN role ON employee.role_id=role.id LEFT JOIN department ON role.department_id=department.id LEFT JOIN employee AS manager ON manager.id= employee.manager_id;");
     }
 
-    addNewRole() {
+    insertDepartment(dept) {
+        return this.connection.promise().query('INSERT INTO department SET ?', dept);
 
-        connection.promise().query(`SELECT department.name FROM department`).then((data) => {
-            console.table(data[0])
-        })
-
-        inquirer.prompt([
-            {
-                type: "input",
-                name: "addRole",
-                message: "What is the name of this role?"
-            },
-            {
-                type: "input",
-                name: "addSalary",
-                message: "What is the salary of the role?"
-            },
-            {
-                type: "list",
-                name: "selectDepartment",
-                message: "What department does this role belong to?",
-                choices: []
-            }
-        ]).then((answers) => {
-            connection.promise().query(`INSERT INTO department (name) VALUES("${answers.addDepartment}";)`);
-        });
     }
+
+    insertRole(employee) {
+
+        return this.connection
+            // .promise()
+            .query(
+                `INSERT INTO employee ( first_name, last_name, role_id, manager_id) VALUES ( '${employee.first_name}', '${employee.last_name}', '${employee.role_id}','${employee.manager_id}');`
+
+            )
+
+    }
+
+
 }
 
 

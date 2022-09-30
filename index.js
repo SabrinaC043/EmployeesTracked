@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const { addNewDepartment, connection, addNewRole } = require("./db/lib");
+const { insertRole } = require("./db/lib");
 require('console.table');
 const db = require('./db/lib');
 
@@ -66,15 +66,119 @@ function viewRoles() {
 }
 
 function addDepartment() {
-    db.addNewDepartment()
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "What is the name of the Department?"
+        },
+    ])
+        .then((answers) => {
+            db.insertDepartment(answers).then(() => init())
+        });
+}
+
+
+async function addEmployee() {
+    let listOfEmployees = await db.getAllEmployees();
+    console.log(listOfEmployees[0])
+
+    let listOfRoles = await db.getAllRoles();
+    console.log(listOfRoles[0])
+
+    let arrayOfRoles = [];
+    listOfRoles[0].map(role => {
+        arrayOfRoles.push(role.id);
+        console.log(role)
+
+    })
+
+    let arrayOfManagers = [];
+    listOfEmployees[0].map(emp => {
+        arrayOfManagers.push(emp.id)
+
+    })
+    console.log(arrayOfManagers)
+
+    let answer = await inquirer.prompt([
+        {
+            type: "list",
+            name: "role_id",
+            message: "What is the name of this role?",
+            choices: arrayOfRoles
+        },
+
+
+        {
+            type: "list",
+            name: "manager_id",
+            message: "Who is their manager?",
+            choices: arrayOfManagers
+        },
+        {
+            type: "input",
+            name: "first_name",
+            message: "What is their first name?",
+            // choices: arrayOfManagers
+        },
+        {
+            type: "input",
+            name: "last_name",
+            message: "What is their last name?",
+        }
+
+    ])
+    console.log(answer) // 1. add employee with the role of Manager 
+    // 2. assign the employee 
+    db.insertRole(answer);
+    init();
 }
 
 
 
 function addRole() {
-    db.addNewRole();
+    let listOfDeparment = [];
+    db.getAllDepartments().then(([data]) => {
+        // what kind of array can I build? return an array of object with key value pairs name:name   value: id
 
+
+        data.map(dep => {
+            listOfDeparment
+                .push(dep.id)
+        }
+        )
+    })
+    // let arrayOfManagers = [];
+    // listOfEmployees[0].map(emp => {
+    //     arrayOfManagers.push(emp.id)
+
+    // })
+    // let data = await db.getAllDepartments();
+    // console.log(data[0])
+
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "title",
+            message: "What is the name of this role?"
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "What is the salary of the role?"
+        },
+        {
+            type: "list",
+            name: "department_id",
+            message: "What department does this role belong to?",
+            choices: listOfDeparment
+        }
+
+    ]).then((answers) => {
+        console.log(answers)
+    });
 }
+
 
 
 // function updateEmployeeRole() {
