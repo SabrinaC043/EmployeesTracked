@@ -1,5 +1,4 @@
 const inquirer = require("inquirer");
-const { insertRole } = require("./db/lib");
 require('console.table');
 const db = require('./db/lib');
 
@@ -79,135 +78,139 @@ function addDepartment() {
 }
 
 
-async function addEmployee() {
-    let listOfEmployees = await db.getAllEmployees();
-    console.log(listOfEmployees[0])
+function addEmployee() {
+    db.getAllRoles().then(([roles]) => {
+        const arrayOfRoles = roles.map(({ id, title }) => ({
+            name: title,
+            value: id
+        }))
 
-    let listOfRoles = await db.getAllRoles();
-    console.log(listOfRoles[0])
+        db.getAllEmployees().then(([emps]) => {
+            const arrayOfManagers = emps.map(({ id, first_name, last_name }) => ({
+                name: `${first_name} ${last_name}`,
+                value: id
+            }))
 
-    let arrayOfRoles = [];
-    listOfRoles[0].map(role => {
-        arrayOfRoles.push(role.id);
-        console.log(role)
+
+
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "role_id",
+                    message: "What is the name of this role?",
+                    choices: arrayOfRoles
+                },
+                {
+                    type: "list",
+                    name: "manager_id",
+                    message: "Who is their manager?",
+                    choices: arrayOfManagers
+                },
+                {
+                    type: "input",
+                    name: "first_name",
+                    message: "What is their first name?",
+
+                },
+                {
+                    type: "input",
+                    name: "last_name",
+                    message: "What is their last name?",
+                }
+            ]).then((answers) => {
+                db.insertEmployee(answers).then(() => init())
+            })
+        })
+
 
     })
 
-    let arrayOfManagers = [];
-    listOfEmployees[0].map(emp => {
-        arrayOfManagers.push(emp.id)
-
-    })
-    console.log(arrayOfManagers)
-
-    let answer = await inquirer.prompt([
-        {
-            type: "list",
-            name: "role_id",
-            message: "What is the name of this role?",
-            choices: arrayOfRoles
-        },
 
 
-        {
-            type: "list",
-            name: "manager_id",
-            message: "Who is their manager?",
-            choices: arrayOfManagers
-        },
-        {
-            type: "input",
-            name: "first_name",
-            message: "What is their first name?",
-            // choices: arrayOfManagers
-        },
-        {
-            type: "input",
-            name: "last_name",
-            message: "What is their last name?",
-        }
-
-    ])
-    console.log(answer) // 1. add employee with the role of Manager 
-    // 2. assign the employee 
-    db.insertRole(answer);
-    init();
 }
-
 
 
 function addRole() {
-    let listOfDeparment = [];
-    db.getAllDepartments().then(([data]) => {
-        // what kind of array can I build? return an array of object with key value pairs name:name   value: id
+    db.getAllDepartments().then(([deps]) => {
+        const listOfDeparment = deps.map(({ id, name }) => ({
+            name: name,
+            value: id,
+        }))
+
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "title",
+                message: "What is the name of this role?"
+            },
+            {
+                type: "input",
+                name: "salary",
+                message: "What is the salary of the role?"
+            },
+            {
+                type: "list",
+                name: "department_id",
+                message: "What department does this role belong to?",
+                choices: listOfDeparment
+            }
+
+        ]).then((answers) => {
+            db.insertRole(answers).then(() => init());
+        });
 
 
-        data.map(dep => {
-            listOfDeparment
-                .push(dep.id)
-        }
-        )
+
     })
-    // let arrayOfManagers = [];
-    // listOfEmployees[0].map(emp => {
-    //     arrayOfManagers.push(emp.id)
 
-    // })
-    // let data = await db.getAllDepartments();
-    // console.log(data[0])
+}
 
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "title",
-            message: "What is the name of this role?"
-        },
-        {
-            type: "input",
-            name: "salary",
-            message: "What is the salary of the role?"
-        },
-        {
-            type: "list",
-            name: "department_id",
-            message: "What department does this role belong to?",
-            choices: listOfDeparment
-        }
+// THEN I am prompted to select an employee to update and their 
 
-    ]).then((answers) => {
-        console.log(answers)
-    });
+// new role and this information is updated in the database
+
+function updateEmployeeRole() {
+    db.getAllRoles().then(([roles]) => {
+        const arrayOfRoles = roles.map(({ id, title }) => ({
+            name: title,
+            value: id
+        }))
+
+        db.getAllEmployees().then(([emps]) => {
+            const arrayOfEmployees = emps.map(({ id, first_name, last_name }) => ({
+                name: `${first_name} ${last_name}`,
+                value: id
+            }))
+
+
+
+            inquirer.prompt([
+                {
+                    type: "list",
+                    name: "emp_id",
+                    message: "Please choose an employee to update?",
+                    choices: arrayOfEmployees
+                },
+                {
+                    type: "list",
+                    name: "role_id",
+                    message: "Please choose their new role:",
+                    choices: arrayOfRoles
+                },
+
+            ]).then((answers) => {
+                db.updateRole(answers.emp_id, answers.role_id).then(() => init())
+            })
+        })
+
+
+    })
 }
 
 
-
-// function updateEmployeeRole() {
-//     inquirer.prompt[{
-//         type: "list",
-//         name: "roleUpdate",
-//         message: "Which role do you want to assign the selected employee?",
-//         choices: ["Accountant",
-//             "Legal Team Lead",
-//             "Lawyer",
-//             "Salesperson",
-//             "Sales Lead"
-//             , "Lead Engineer",
-//             "Software Engineer",
-//             "Account Manager",]
-//     },
-//     {
-//         type: "list",
-//         name: "whoseManager",
-//         choices: ["Hailey Martinez", "John Doe", "Joshua Jones",]
-//     }
-//     ]
-//     init();
-
-// };
 
 
 
 
 init();
 
-module.exports = init
