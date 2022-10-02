@@ -4,7 +4,7 @@ This command-line application within Node works with mySql in order to provide a
 
 ## Description
 
-The goal of this application is to provide a user with the ability to view data within Node that is stored in a mySQL schema. Overall, this will enhance the users ability to upload and modify existing employees or add new employees to the system.
+The goal of this application is to provide a user with the ability to view data within Node that is queried and stored within a mySQL database. Overall, this will enhance the users ability to upload and modify existing employees or add new employees to the system.
 
 ## Problem
 
@@ -26,4 +26,4 @@ With the goal of organizing and updated roles/ add new employees as their career
 
 ##### Video Walkthrough
 
-[Video of "Employees Tracked"]()
+[Video of "Employees Tracked"](https://youtu.be/FWd_Zc5Ecgs)
