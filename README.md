@@ -24,6 +24,6 @@ With the goal of organizing and updated roles/ add new employees as their career
 
 - This experience overall was a challenge and enhanced my ability to grow as a junior developer. Following the logic and understanding the data was critical in being able to formulate my pseudo code. I also was able to learn the value of following documentation to not break code and keep my eye on the big picture.
 
-##### Video Walkthrough
+#### Video Walkthrough
 
 [Video of "Employees Tracked"](https://youtu.be/FWd_Zc5Ecgs)
